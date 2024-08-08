@@ -1,0 +1,74 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Sans);
+ * {
+	 box-sizing: border-box;
+}
+ 
+ h1 {
+	 text-align: center;
+	 font-size: 48px;
+	 text-transform: uppercase;
+	 letter-spacing: 3px;
+	 color: #222;
+}
+ .menu1 {
+	 list-style: none;
+	 left: 5vw;
+	 padding-left: 5vh;
+	 min-width: 89w;
+	 width: 90%;
+	 height: 12em;
+	 margin-left: 9.5vh;
+	 position: relative;
+	 background-color: white;
+	 z-index: 7;
+}
+ .menu1 li {
+	 float: left;
+	 width: 25%;
+	 height: 10px;
+	 margin: 0;
+	 padding: 0;
+}
+ .menu1 a {
+	 display: flex;
+	 width: 100%;
+	 height: 100%;
+	 justify-content: center;
+	 align-items: center;
+	 color: gray;
+	 text-decoration: none;
+	 position: relative;
+	 font-size: 18px;
+	 z-index: 9;
+}
+ a.active {
+	 background-color: transparent;
+	 pointer-events: none;
+}
+ li.slider {
+	 width: 25%;
+	 height: 100%;
+	 position: absolute;
+	 left: 0;
+	 top: 0;
+	 background-color: #0000000d	;
+	 z-index: 8;
+	 transition: left .4s, background-color .4s;
+}
+ .menu1 li:nth-child(1):hover ~ .slider, .menu1 li:nth-child(1):focus ~ .slider, .menu1 li:nth-child(1):active ~ .slider {
+	 left: 0;
+	 background-color: #0000000d;
+}
+ .menu1 li:nth-child(2):hover ~ .slider, .menu1 li:nth-child(2):focus ~ .slider, .menu1 li:nth-child(2):active ~ .slider {
+	 left: 25%;
+	 background-color: #0000000d;
+}
+ .menu1 li:nth-child(3):hover ~ .slider, .menu1 li:nth-child(3):focus ~ .slider, .menu1 li:nth-child(3):active ~ .slider {
+	 left: 50%;
+	 background-color: #0000000d;
+}
+ .menu1 li:nth-child(4):hover ~ .slider, .menu1 li:nth-child(4):focus ~ .slider, .menu1 li:nth-child(4):active ~ .slider {
+	 left: 75%;
+	 background-color: #0000000d;
+}
+ 

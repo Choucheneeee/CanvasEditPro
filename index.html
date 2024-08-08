@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="kitchensink">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Kitchensink | Fabric.js Demos</title>
+
+    <link rel="stylesheet" href="css/master.css">
+    <link rel="stylesheet" href="css/prism.css">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style2.css" />
+    <style>
+      .imgg{
+        width: 200px;
+        height: 200px;
+        
+        position:relative;
+        top: -1em;
+      }
+      pre { margin-left: 10px !important }
+    </style>
+
+    <!--[if lt IE 9]>
+      <script src="../lib/excanvas.js"></script>
+    <![endif]-->
+    <style>
+      #canvas {
+        position: fixed;
+        width: 80lvw;
+        height: 89lvh;
+        right: 5vh; /* Align to the right */
+        text-align: center;
+        align-items: center;
+        background-color: white;
+      }
+      input[type="file"] {
+        outline: none;
+        padding: 4px;
+        margin: -4px;
+      }
+      li{
+        font-weight: bold;
+      }
+  
+      input[type="file"]:focus-within::file-selector-button,
+      input[type="file"]:focus::file-selector-button {
+        outline: 2px solid #0964b0;
+        outline-offset: 2px;
+      }
+  
+      input[type="file"]::before {
+        top: 16px;
+      }
+  
+      input[type="file"]::after {
+        top: 14px;
+      }
+  
+      /* ------- From Step 2 ------- */
+  
+      input[type="file"] {
+        position: relative;
+      }
+  
+      input[type="file"]::file-selector-button {
+        width: 136px;
+        color: transparent;
+      }
+  
+      /* Faked label styles and icon */
+      input[type="file"]::before {
+        position: absolute;
+        pointer-events: none;
+        /*   top: 11px; */
+        left: 40px;
+        color: #0964b0;
+        content: "Upload File";
+      }
+  
+      input[type="file"]::after {
+        position: absolute;
+        pointer-events: none;
+        /*   top: 10px; */
+        left: 16px;
+        height: 20px;
+        width: 20px;
+        content: "";
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230964B0'%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z'/%3E%3C/svg%3E");
+      }
+  
+      /* ------- From Step 1 ------- */
+  
+      /* file upload button */
+      input[type="file"]::file-selector-button {
+        border-radius: 4px;
+        padding: 0 16px;
+        height: 40px;
+        cursor: pointer;
+        background-color: white;
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+        margin-right: 16px;
+        transition: background-color 200ms;
+      }
+  
+      /* file upload button hover state */
+      input[type="file"]::file-selector-button:hover {
+        background-color: #f3f4f6;
+      }
+  
+      /* file upload button active state */
+      input[type="file"]::file-selector-button:active {
+        background-color: #e5e7eb;
+      }
+    </style>
+
+    <script>
+      (function() {
+        var fabricUrl = 'lib/fabric.js';
+        if (document.location.search.indexOf('load_fabric_from=') > -1) {
+          var match = document.location.search.match(/load_fabric_from=([^&]*)/);
+          if (match && match[1]) {
+            fabricUrl = match[1];
+          }
+        }
+        document.write('<script src="' + fabricUrl + '"><\/script>');
+      })();
+    </script>
+    <script src="js/master.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+  </head>
+  <body style="background-color: #a7a8a8a8;">
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script>
+(function() {
+
+  if (document.location.hostname === 'localhost') {
+    var links = document.getElementById('header').getElementsByTagName('a');
+    for (var i = 0, len = links.length; i < len; i++) {
+      // very retarted fix but fuck it
+      links[i].href = links[i].href.replace('fabricjs.com', 'localhost:4000');
+    }
+  }
+  else {
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+  }
+})();
+</script>
+
+
+    <div id="bd-wrapper" ng-controller="CanvasControls">
+      <div>
+        <div>
+          <ul class="menu1">            <li style="margin-top: 30px; margin-right:29vh; width:30px"><label for="opacity">Opacity:</label>
+              <input value="100" type="range" bind-value-to="opacity" class="btn-object-action"><br /></li></li>
+            <li style="margin-top: 30px; margin-right:30px; width:250px"><label for="color">Fill / Stroke / Background:</label>
+              <input type="color" style="width:40px" bind-value-to="fill" class="btn-object-action">
+              <input type="color" style="width:40px" bind-value-to="stroke" class="btn-object-action">
+              <input type="color" value="" id="text-bg-color" size="10" class="btn-object-action" bind-value-to="bgColor"><br /></li>
+            <li style="margin-top: 30px; margin-right:29vh; width:30px"> <div>
+              <label for="text-font-size">Font size:</label>
+              <input type="range" value="" min="1" max="120" step="1" id="text-font-size" class="btn-object-action"
+                bind-value-to="fontSize">
+            </div></li>
+            <li style="margin-top: 30px; margin-right:29vh; width:30px">
+              <p>
+                <label for="canvas-background-picker">Canvas background:</label>
+                <input type="color" bind-value-to="canvasBgColor">
+              </p>
+            </li>
+            <li style="position:absolute;bottom:10em;left:70em;">
+              <div style="margin-top:10px;">
+                <button id="send-backwards" class="btn btn-object-action"
+                  ng-click="sendBackwards()">Send backwards</button>
+                <button id="send-to-back" class="btn btn-object-action"
+                  ng-click="sendToBack()">Send to back</button>
+              </div>
+      
+              <div style="margin-top:4px;">
+                <button id="bring-forward" class="btn btn-object-action"
+                  ng-click="bringForward()">Bring forwards</button>
+                <button id="bring-to-front" class="btn btn-object-action"
+                  ng-click="bringToFront()">Bring to front</button>
+              </div>
+              
+            </li>
+            <li style="position: absolute;top:8em;left:18em;">
+              <p>
+                <button class="btn btn-danger clear" ng-click="confirmClear()">Clear canvas</button>
+                <button class="btn btn-object-action" id="remove-selected"
+                  ng-click="removeSelected()">
+                  Remove selected object/group
+                </button>
+              </p>
+            </li><li>
+              <div style="position: absolute;top:8em;" id="drawing-mode-wrapper">
+
+                <button id="drawing-mode" class="btn btn-info"
+                  ng-click="setFreeDrawingMode(!getFreeDrawingMode())"
+                  ng-class="{'btn-inverse': getFreeDrawingMode()}">
+                  {[ getFreeDrawingMode() ? 'Exit free drawing mode' : 'Enter free drawing mode' ]}
+                </button>
+        
+                <div id="drawing-mode-options" ng-show="getFreeDrawingMode()">
+                  <label for="drawing-mode-selector">Mode:</label>
+                  <select id="drawing-mode-selector" bind-value-to="drawingMode">
+                    <option>Pencil</option>
+                    <option>Circle</option>
+                    <option>Spray</option>
+                    <option>Pattern</option>
+        
+                    <option>hline</option>
+                    <option>vline</option>
+                    <option>square</option>
+                    <option>diamond</option>
+                    <option>texture</option>
+                  </select>
+                  <br>
+                  <label for="drawing-line-width">Line width:</label>
+                  <input type="range" value="30" min="0" max="150" bind-value-to="drawingLineWidth">
+                  <br>
+                  <label for="drawing-color">Line color:</label>
+                  <input type="color" value="#005E7A" bind-value-to="drawingLineColor">
+                  <br>
+                  <label for="drawing-shadow-width">Line shadow width:</label>
+                  <input type="range" value="0" min="0" max="50" bind-value-to="drawingLineShadowWidth">
+                </div>
+              </div>
+            </li>
+
+            
+            
+          </ul>
+        </div>
+  
+        <nav class="sidebar active">
+          <header>
+            <div class="image-text">
+              <span class="image">
+                <img src="logo.png" alt="" />
+              </span>
+            </div>
+          </header>
+  
+          <div class="menu-bar" >
+            <div class="menu">
+              <ul class="menu-links">
+                <li class="nav-link">
+                  <a href="#" onclick="handleClick('sid')">
+                    <img
+                      src="icons8-text.gif"
+                      style="height: 21px; position: relative; left: 2vh"
+                    />
+                    <span
+
+                      class="text nav-text"
+                      style="position: relative; left: 5vh"
+                      >Text</span
+                    >
+                  </a>
+                </li>
+  
+                <li class="nav-link">
+                  <a href="#" onclick="handleClick('sid2')">
+                    <img
+                      src="vedio.gif"
+                      style="height: 21px; position: relative; left: 2vh"
+                    />
+                    <span
+                      class="text nav-text"
+                      style="position: relative; left: 5vh"
+                      >Vedio</span
+                    >
+                  </a>
+                </li>
+  
+                <li class="nav-link">
+                  <a href="#" onclick="handleClick('sid3')">
+                    <img
+                      src="shapes.gif"
+                      style="height: 21px; position: relative; left: 2vh"
+                    />
+                    <span
+                      class="text nav-text"
+                      style="position: relative; left: 5vh"
+                      >shapes</span
+                    >
+                  </a>
+                </li>
+  
+                <li class="nav-link">
+                  <a href="#" onclick="handleClick('sid4')">
+                    <img
+                      src="up.gif"
+                      style="height: 21px; position: relative; left: 2vh"
+                    />
+                    <span
+                      class="text nav-text"
+                      style="position: relative; left: 5vh"
+                      >Upload</span
+                    >
+                  </a>
+                  <br />
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+  
+       
+      </div>
+      <div id="sid"  style="background-color:red;">  
+        <ul class="sidebar2">
+          <li ng-click="addIText()" id="addTextButton">Add Text</li>
+          <li>Font:
+            <select id="font-family" class="btn-object-action" bind-value-to="fontFamily">
+              <option value="arial">Arial</option>
+              <option value="helvetica" selected>Helvetica</option>
+              <option value="myriad pro">Myriad Pro</option>
+              <option value="delicious">Delicious</option>
+              <option value="verdana">Verdana</option>
+              <option value="georgia">Georgia</option>
+              <option value="courier">Courier</option>
+              <option value="comic sans ms">Comic Sans MS</option>
+              <option value="impact">Impact</option>
+              <option value="monaco">Monaco</option>
+              <option value="optima">Optima</option>
+              <option value="hoefler text">Hoefler Text</option>
+              <option value="plaster">Plaster</option>
+              <option value="engagement">Engagement</option>
+            </select>
+      <br>
+          </li>
+          <button type="button" class="btn btn-object-action"
+              ng-click="toggleBold()"
+              ng-class="{'btn-inverse': isBold()}">
+              Bold
+            </button>
+            <button type="button" class="btn btn-object-action" id="text-cmd-italic"
+              ng-click="toggleItalic()"
+              ng-class="{'btn-inverse': isItalic()}">
+              Italic
+            </button>
+            <button type="button" class="btn btn-object-action" id="text-cmd-underline"
+              ng-click="toggleUnderline()"
+              ng-class="{'btn-inverse': isUnderline()}">
+              Underline
+            </button>
+            <button type="button" class="btn btn-object-action" id="text-cmd-linethrough"
+              ng-click="toggleLinethrough()"
+              ng-class="{'btn-inverse': isLinethrough()}">
+              Linethrough
+            </button>
+            <button type="button" class="btn btn-object-action" id="text-cmd-overline"
+              ng-click="toggleOverline()"
+              ng-class="{'btn-inverse': isOverline()}">
+              Overline
+            </button>
+            <br />
+        </ul>
+      </div>
+      
+      <div id="sid2">
+        <ul class="sidebar2">
+          <li>Image</li>
+          <li>
+            <div class="right">
+ 
+  </div>
+          </li>
+          <li ><img src="https://picsum.photos/400/400?random=1"  alt="photos loading" class="imgg">  </li>
+          <li><img src="https://picsum.photos/400/400?random=2" style="position:relatives;top:100px;" class="imgg">  </li>
+          <li><img src="https://picsum.photos/400/400?random=2" style="position:relatives;top:100px;" class="imgg">  </li>
+          <li><img src="https://picsum.photos/400/400?random=2" style="position:relatives;top:100px;" class="imgg">  </li>
+
+          <li>10</li>
+        </ul>
+      </div>
+      <div id="sid3">
+        <ul class="sidebar2">
+          <li style="border: 2;" ng-click="addRect()" id="createRectangleButton">Rectangle</li>
+          <li ng-click="addCircle()" id="createCirButton">Circle</li>
+          <li ng-click="addLine()">Line</li>
+          <li   ng-click="addTriangle()" >Triangle</li>
+          <li ng-click="addPolygon()">Polygon</li>
+        </ul>
+      </div>
+      <div id="sid4">
+        <ul class="sidebar2">
+          <li>photos:<input id="photoInput" style="height: 200PX;top:5.5em;" type="file" accept="image/*" /></li>
+
+        </ul>
+      </div>
+      
+      <!--[if IE]><script src="../lib/fonts/Delicious.font.js"></script><![endif]-->
+<script>
+      let currentDiv = null;
+      document.getElementById("sid").style.display = "none";
+      document.getElementById("sid2").style.display = "none";
+      document.getElementById("sid3").style.display = "none";
+      document.getElementById("sid4").style.display = "none";
+      function handleClick(divId) {
+        const div = document.getElementById(divId);
+        if (currentDiv && currentDiv !== div) {
+          currentDiv.style.display = "none"; // Hide the previously selected div
+        }
+        if (div.style.display === "none") {
+          div.style.display = "block"; // Show the clicked div
+          currentDiv = div;
+        } else {
+          div.style.display = "none"; // Hide the clicked div
+          currentDiv = null;
+        }
+      }
+    </script>
+    <script>
+      
+    </script>
+<script src="lib/jquery.js"></script>
+<script src="lib/bootstrap.js"></script>
+<script src="js/paster.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/kitchensink.css">
+
+<link href='http://fonts.googleapis.com/css?family=Plaster' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Engagement' rel='stylesheet' type='text/css'>
+
+<div style="position: relative;top:5em; left:10%;" id="canvas-wrapper">
+  <canvas width="1200"  height="500" id="canvas" ></canvas>
+</div>
+
+
+
+
+<!-- <script src="../../lib/centering_guidelines.js"></script>
+<script src="../../lib/aligning_guidelines.js"></script> -->
+
+<script src="lib/font_definitions.js"></script>
+
+<script>
+  var kitchensink = { };
+  var canvas = new fabric.Canvas('canvas');
+  const ctx = canvas.getContext('2d');
+        const photoInput = document.getElementById('photoInput');
+        const videoInput = document.getElementById('videoInput'); // Assuming you have an input element for video uploads
+
+        photoInput.addEventListener('change', handleImageUpload);
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+
+                img.onload = () => {
+                  URL.revokeObjectURL(img.src); // no longer needed, free memory
+                  const fabricImg = new fabric.Image(img, {
+                    left: 100, // Set initial position
+                    top: 100,
+                    scaleX: 0.5, // Scale down the image
+                    scaleY: 0.5,
+                  });
+                  canvas.add(fabricImg);
+                };
+            };
+
+            reader.readAsDataURL(file);
+        }
+        
+
+videoInput.addEventListener('change', handleVideoUpload);
+
+function handleVideoUpload(event) {
+    const file = event.target.files[0];
+    const video = document.createElement('video');
+
+    video.src = URL.createObjectURL(file); // Create a blob URL for the video
+
+    video.onloadedmetadata = () => {
+        // Set initial position and dimensions for the video
+        const fabricVideo = new fabric.Image(video, {
+            left: 100,
+            top: 100,
+            width: video.videoWidth * 0.5, // Scale down the video
+            height: video.videoHeight * 0.5,
+        });
+        console.log("done video")
+        canvas.add(fabricVideo);
+    };
+}
+        
+</script>
+
+<script src="js/kitchensink/utils.js"></script>
+<script src="js/kitchensink/app_config.js"></script>
+<script src="js/kitchensink/controller.js"></script>
+
+
+    </div>
+   
+
+    <script>
+(function() {
+  fabric.util.addListener(fabric.window, 'load', function() {
+    var canvas = this.__canvas || this.canvas,
+        canvases = this.__canvases || this.canvases;
+
+    canvas && canvas.calcOffset && canvas.calcOffset();
+
+    if (canvases && canvases.length) {
+      for (var i = 0, len = canvases.length; i < len; i++) {
+        canvases[i].calcOffset();
+      }
+    }
+  });
+})();
+</script>
+
+
+  </body>
+</html>
