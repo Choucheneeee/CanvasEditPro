@@ -5,6 +5,7 @@
     <meta charset="utf-8">
 
     <title>Kitchensink | Fabric.js Demos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="css/master.css">
     <link rel="stylesheet" href="css/prism.css">
@@ -19,12 +20,33 @@
         top: -1em;
       }
       pre { margin-left: 10px !important }
+      @media only screen and (max-width: 900px) {
+        .imgg{
+          width: 50px;
+          height: 50px;
+          
+          position:relative;
+          top: 8em;
+        }
+        #canvas {
+          position: fixed;
+          width: 10lvw;
+          height: 10lvh;
+          right: 5vh; /* Align to the right */
+          text-align: center;
+          align-items: center;
+          background-color: red;
+        }
+      } 
+
     </style>
 
     <!--[if lt IE 9]>
       <script src="../lib/excanvas.js"></script>
     <![endif]-->
     <style>
+      @media only screen and (min-width: 900px) {
+
       #canvas {
         position: fixed;
         width: 80lvw;
@@ -113,6 +135,7 @@
       input[type="file"]::file-selector-button:active {
         background-color: #e5e7eb;
       }
+    }
     </style>
 
     <script>
@@ -263,19 +286,7 @@
                   </a>
                 </li>
   
-                <li class="nav-link">
-                  <a href="#" onclick="handleClick('sid2')">
-                    <img
-                      src="vedio.gif"
-                      style="height: 21px; position: relative; left: 2vh"
-                    />
-                    <span
-                      class="text nav-text"
-                      style="position: relative; left: 5vh"
-                      >Vedio</span
-                    >
-                  </a>
-                </li>
+             
   
                 <li class="nav-link">
                   <a href="#" onclick="handleClick('sid3')">
@@ -305,10 +316,21 @@
                   </a>
                   <br />
                 </li>
+                <li class="nav-link">
+                  <a href="#" id="download">
+                    <img
+                      src="down.gif"
+                      style="height: 21px; position: relative; left: 2vh"
+                    />
+                  </a>
+                  <br />
+                </li>
+               
               </ul>
             </div>
           </div>
         </nav>
+
   
        
       </div>
@@ -497,6 +519,28 @@ function handleVideoUpload(event) {
         
 </script>
 
+<script>
+  window.onload = function() {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      // Draw something on the canvas
+      
+
+      document.getElementById("download").addEventListener("click", function() {
+          // Convert the canvas to data
+          var image = canvas.toDataURL("image/png");
+          // Create a link
+          var aDownloadLink = document.createElement('a');
+          // Add the name of the file to the link
+          aDownloadLink.download = 'canvas_image.png';
+          // Attach the data to the link
+          aDownloadLink.href = image;
+          // Click the download link
+          aDownloadLink.click();
+      });
+  }
+</script>
 <script src="js/kitchensink/utils.js"></script>
 <script src="js/kitchensink/app_config.js"></script>
 <script src="js/kitchensink/controller.js"></script>

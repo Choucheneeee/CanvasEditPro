@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Download</title>
+    <style>
+        body {
+            background: rgb(15, 19, 22);
+            padding: 1rem;
+        }
+        canvas {
+            width: 700px;
+            height: 425px;
+            margin: 0 1rem 0 0;
+            border-radius: 10px;
+        }
+        button {
+            background: linear-gradient(45deg, #ff6d1b, #e0417f);
+            font-size: 1.25rem;
+            padding: 0.75rem 1.5rem;
+            line-height: 1.5rem;
+            will-change: transform, filter;
+            margin: 0 0 1rem 0;
+            transition: all 0.15s ease-out;
+            cursor: pointer;
+            border-radius: 100px;
+            display: block;
+            border: none;
+            color: white;
+            font-family: Inter, sans-serif;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
+            font-variation-settings: 'wght' 600;
+            perspective-origin: 0 0;
+            letter-spacing: 0;
+        }
+        button:hover {
+            transform: scale(1.04);
+        }
+    </style>
+</head>
+<body>
+    <button id="download">Download Canvas</button>
+    <canvas id="canvas"></canvas>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        window.onload = function() {
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+
+            // Draw something on the canvas
+            ctx.fillStyle = "blue";
+            ctx.fillRect(10, 10, 100, 100);
+
+            document.getElementById("download").addEventListener("click", function() {
+                // Convert the canvas to data
+                var image = canvas.toDataURL("image/png");
+                // Create a link
+                var aDownloadLink = document.createElement('a');
+                // Add the name of the file to the link
+                aDownloadLink.download = 'canvas_image.png';
+                // Attach the data to the link
+                aDownloadLink.href = image;
+                // Click the download link
+                aDownloadLink.click();
+            });
+        }
+    </script>
+</body>
+</html>
