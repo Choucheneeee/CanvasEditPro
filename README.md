@@ -2,7 +2,10 @@
 
 CanvasEditPro is a simple yet powerful canvas editor for the web. Built using HTML, CSS, JavaScript, and Fabric.js, it allows users to create, edit, and manage content on a customizable canvas. Perfect for creating designs, editing images, or even prototyping ideas in a browser-based environment.
 
+![Uploading image.png…]()
+
 ## Features
+
 
 - **Add Images**: Upload and position images on the canvas.
 - **Add Text**: Insert and style text with various fonts, sizes, and colors.
