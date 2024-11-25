@@ -14,7 +14,7 @@ CanvasEditPro is a simple yet powerful canvas editor for the web. Built using HT
 
 ## Demo
 
-[Live Demo]((https://intern-5m87-choucheneeees-projects.vercel.app/))
+-Live Demo:https://intern-5m87-choucheneeees-projects.vercel.app/
 
 ## Installation
 
