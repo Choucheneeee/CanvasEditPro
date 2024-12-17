@@ -1,3 +1,3 @@
 function testing(){
-    console.log("i am testing my code")
+    console.log("i am testsing my code")
 }
